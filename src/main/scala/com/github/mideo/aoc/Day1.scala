@@ -2,8 +2,6 @@ package com.github.mideo.aoc
 
 
 object Day1 extends AdventOfCodeExercise[Int]:
-  override val inputFile: String = "Day1.txt"
-
   override def partOneSolution(input: Seq[String]): Int =
     val (head, last) = input
       .map(_.split(" "))

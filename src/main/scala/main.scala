@@ -12,4 +12,10 @@ import com.github.mideo.aoc.*
   println("\nDay3")
   Day3.partOne()
   Day3.partTwo()
+
+  println("\nDay4")
+  Day4.partOne()
+  Day4.partTwo()
+
+
 }

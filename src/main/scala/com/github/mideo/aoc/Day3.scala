@@ -7,8 +7,6 @@ case class Multiplier(x: Int, y: Int):
 
 
 object Day3 extends AdventOfCodeExercise[Int]:
-
-  override val inputFile: String = "Day3.txt"
   private val multiplierPattern: Regex = """mul\((\d+),(\d+)\)""".r
   private val conditionalMultiplierPattern: Regex = """(mul\((\d+),(\d+)\)|do\(\)|don't\(\))""".r
 

@@ -17,5 +17,7 @@ import com.github.mideo.aoc.*
   Day4.partOne()
   Day4.partTwo()
 
-
+  println("\nDay5")
+  Day5.partOne()
+  Day5.partTwo()
 }

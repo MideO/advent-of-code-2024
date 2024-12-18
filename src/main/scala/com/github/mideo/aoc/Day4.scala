@@ -11,19 +11,6 @@ enum Direction(val y: Int, val x: Int):
   case DownLeft extends Direction(1, -1)
   case UpLeft extends Direction(-1, -1)
 
-class Puzzle(grid: Seq[Seq[Char]]):
-  private def withinBoundary(y: Int, x: Int): Boolean =
-    (y >= 0 && y < grid.length) && (x >= 0 && x < grid(y).length)
-
-  def height: Int = grid.size
-
-  def width: Int = grid.head.size
-
-  def charAt(y: Int, x: Int) = grid(y)(x)
-
-  def exploreDirections(y: Int, x: Int, direction: Direction): Iterator[Char] =
-    Iterator.unfold(y, x): (y, x) =>
-      Option.when(withinBoundary(y, x))(charAt(y, x), (y + direction.y, x + direction.x))
 
 object Day4 extends AdventOfCodeExercise[Int]:
 

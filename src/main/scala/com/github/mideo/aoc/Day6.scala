@@ -1,23 +1,31 @@
 package com.github.mideo.aoc
 
+import scala.annotation.tailrec
+
 case class Position(y: Int, x: Int)
 
-case class Guard(position: Position, direction: Direction, puzzle: Puzzle):
-  private val rightOf: Map[Direction, Direction] = Map(
+object Turn:
+  val rightOf: Map[Direction, Direction] = Map(
     Direction.Up -> Direction.Right,
     Direction.Right -> Direction.Down,
     Direction.Down -> Direction.Left,
     Direction.Left -> Direction.Up
   )
 
-  def move(): Guard = {
-    val y = position.y + direction.y
-    val x = position.x + direction.x
-    if (!puzzle.withinBoundary(x, y))
-      return Guard(position, direction, puzzle)
-    puzzle.charAt(y, x) match {
-      case '#' => Guard(position, rightOf(direction), puzzle).move()
-      case _ => Guard(Position(y, x), direction, puzzle)
+
+case class Guard(position: Position,
+                 direction: Direction,
+                 puzzle: Puzzle,
+                 trail: Seq[Position]):
+  @tailrec
+  final def move(): Guard = {
+    (position.y + direction.y, position.x + direction.x) match {
+      case (y, x) if !puzzle.withinBoundary(y, x) =>
+        Guard(position, direction, puzzle, trail :+ position)
+      case (y, x) => puzzle.charAt(y, x) match {
+        case '#' => Guard(position, Turn.rightOf(direction), puzzle, trail).move()
+        case _ => Guard(Position(y, x), direction, puzzle, trail :+ position)
+      }
     }
   }
 
@@ -29,18 +37,25 @@ object Day6 extends AdventOfCodeExercise[Int]:
     val puzzle = new Puzzle(input.map(_.toCharArray))
     val iterator = findGuard(puzzle) match {
       case Some(position) =>
-        Iterator.unfold(Guard(position, Direction.Up, puzzle)):
-          g =>
-            Option.when(puzzle.withinBoundary(position.y, position.x))(
-              g, g.move()
-            )
+        Iterator.unfold(Guard(position, Direction.Up, puzzle, Seq.empty)):
+          g => Option
+            .when(puzzle.withinBoundary(g.position.y, g.position.x))(g, g.move())
       case None => Iterator.empty
     }
-    iterator.iterator
+    val xx = iterator.iterator
       .take(puzzle.height * puzzle.width)
-      .map(_.position)
-      .map(position => (position.y, position.x))
-      .distinct.toList.length
+      .map(g => (g.position.y, g.position.x))
+      .distinct.toList
+
+    val pp = puzzle.grid.zipWithIndex.map(
+      (y, iy) => {
+        y.zipWithIndex.map {
+          (x, ix) => if (xx.contains(iy, ix)) 'X' else x
+        }
+      }
+    )
+    println(pp.map(_.mkString).mkString("\n"))
+    xx.length
 
 
   override def partTwoSolution(input: Seq[String]): Int =

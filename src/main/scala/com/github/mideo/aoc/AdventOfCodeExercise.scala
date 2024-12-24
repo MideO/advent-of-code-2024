@@ -56,3 +56,13 @@ class Puzzle(val grid: Seq[Seq[Char]]):
   def exploreDirections(y: Int, x: Int, direction: Direction): Iterator[Char] =
     Iterator.unfold(y, x): (y, x) =>
       Option.when(withinBoundary(y, x))(charAt(y, x), (y + direction.y, x + direction.x))
+
+enum Direction(val y: Int, val x: Int):
+  case Up extends Direction(-1, 0)
+  case Right extends Direction(0, 1)
+  case Down extends Direction(1, 0)
+  case Left extends Direction(0, -1)
+  case UpRight extends Direction(-1, 1)
+  case DownRight extends Direction(1, 1)
+  case DownLeft extends Direction(1, -1)
+  case UpLeft extends Direction(-1, -1)

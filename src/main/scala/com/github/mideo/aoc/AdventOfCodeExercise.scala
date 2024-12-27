@@ -57,6 +57,10 @@ class Puzzle(val grid: Seq[Seq[Char]]):
     Iterator.unfold(y, x): (y, x) =>
       Option.when(withinBoundary(y, x))(charAt(y, x), (y + direction.y, x + direction.x))
 
+  def positions:Iterator[Position] = Iterator
+    .tabulate(height, width)((y,x) => Position(y,x))
+    .flatten
+
 enum Direction(val y: Int, val x: Int):
   case Up extends Direction(-1, 0)
   case Right extends Direction(0, 1)
